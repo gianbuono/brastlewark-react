@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import {
   fetchUsers
 } from './actions'
+import './App.css'
+import {Header} from './components/Header'
 
 class App extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class App extends Component {
     const { users, isFetching, lastUpdated } = this.props
     return (
       <div>
+        <Header />
         <p>
         <div style={{ opacity: isFetching ? 0.5 : 1 }}>
             {JSON.stringify(this.props)}
