@@ -14,3 +14,8 @@
   max-width: 1000px;
   margin: 40px auto;
 }
+.gnome-summary-head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

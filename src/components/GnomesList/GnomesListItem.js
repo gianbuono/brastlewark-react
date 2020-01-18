@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import {
-    Modal
-} from 'reactstrap';
+
 class GnomesListItem extends Component {
 
     render() {
         const { user } = this.props
         return (
-            <tr onClick={() => alert('clocked')}>
+            <tr>
                 <td><img src={user.thumbnail} width="50" height="50" alt={user.name} /></td>
                 <td>{user.name}</td>
                 <td align="center">{user.age}</td>
