@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {
-  Switch,
-  Route,
-  useParams,
-  useRouteMatch
-} from "react-router-dom";
 import { connect } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Redirect,
+  Route,
+} from "react-router-dom";
 import {
   fetchUsers
 } from './actions'
 import './App.css'
 import { Header } from './components/Header'
 import GnomesList from './components/GnomesList'
+import { GnomeDetails } from './components/GnomeDetails'
 
 class App extends Component {
   constructor(props) {
@@ -34,10 +35,32 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <Switch>
-          <Route exaxt path="/">
-            <div className="App-body">
-              {/* <p>
+        <div className="App-body">
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Redirect to="/gnomes" />
+              </Route>
+              <Route path="/gnomes">
+                <Switch>
+                  <Route exact path="/gnomes">
+                    {isFetching && users.length === 0 && <h2>Loading...</h2>}
+                    {!isFetching && users.length === 0 && <h2>Empty.</h2>}
+                    {users.length > 0 && (
+                      <div className="data-table-wrapper">
+                        <GnomesList users={users} />
+                      </div>
+                    )}
+                  </Route>
+                  <Route exact path="/gnomes/:gnomeId">
+                    <GnomeDetails {...this.props} />
+                  </Route>
+                </Switch>
+              </Route>
+            </Switch>
+          </Router>
+
+          {/* <p>
             {lastUpdated && (
               <span>
                 Last updated at {new Date(lastUpdated).toLocaleTimeString()}.{' '}
@@ -47,19 +70,8 @@ class App extends Component {
               <button onClick={this.handleRefreshClick}>Refresh</button>
             )}
           </p> */}
-              {isFetching && users.length === 0 && <h2>Loading...</h2>}
-              {!isFetching && users.length === 0 && <h2>Empty.</h2>}
-              {users.length > 0 && (
-                <div className="data-table-wrapper">
-                  <GnomesList users={users} />
-                </div>
-              )}
-            </div>
-          </Route>
-          <Route path={`/:gnomeId`}>
-                <div>ciccia</div>
-          </Route>
-        </Switch>
+
+        </div>
       </div>
     )
   }
