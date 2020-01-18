@@ -8,3 +8,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.data-table-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 40px auto;
+}

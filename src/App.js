@@ -5,7 +5,8 @@ import {
   fetchUsers
 } from './actions'
 import './App.css'
-import {Header} from './components/Header'
+import { Header } from './components/Header'
+import GnomesList from './components/GnomesList'
 
 class App extends Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class App extends Component {
     const { dispatch } = this.props
     dispatch(fetchUsers())
   }
- 
+
   handleRefreshClick(e) {
     e.preventDefault()
     const { dispatch } = this.props
@@ -27,26 +28,25 @@ class App extends Component {
     return (
       <div>
         <Header />
-        <p>
-        <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            {JSON.stringify(this.props)}
-          </div>
-          {lastUpdated && (
-            <span>
-              Last updated at {new Date(lastUpdated).toLocaleTimeString()}.{' '}
-            </span>
+        <div className="App-body">
+          {/* <p>
+            {lastUpdated && (
+              <span>
+                Last updated at {new Date(lastUpdated).toLocaleTimeString()}.{' '}
+              </span>
+            )}
+            {!isFetching && (
+              <button onClick={this.handleRefreshClick}>Refresh</button>
+            )}
+          </p> */}
+          {isFetching && users.length === 0 && <h2>Loading...</h2>}
+          {!isFetching && users.length === 0 && <h2>Empty.</h2>}
+          {users.length > 0 && (
+            <div className="data-table-wrapper">
+              <GnomesList users={users} />
+            </div>
           )}
-          {!isFetching && (
-            <button onClick={this.handleRefreshClick}>Refresh</button>
-          )}
-        </p>
-        {isFetching && users.length === 0 && <h2>Loading...</h2>}
-        {!isFetching && users.length === 0 && <h2>Empty.</h2>}
-        {users.length > 0 && (
-          <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            {JSON.stringify(this.props)}
-          </div>
-        )}
+        </div>
       </div>
     )
   }
