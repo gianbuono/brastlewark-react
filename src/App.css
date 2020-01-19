@@ -39,6 +39,10 @@
   text-align: left;
 }
 
+.gnome-friends ul li a {
+  font-size: 0.9em;
+}
+
 button {
   border: none;
   outline: 0;

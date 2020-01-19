@@ -12,7 +12,7 @@ class GnomeDetails extends Component {
         if (gnome) {
 
             gnome.friends.map(function (v, i) {
-                friendsArr.push(users.find(function (element) { return element.name === v }));
+                return friendsArr.push(users.find(function (element) { return element.name === v }));
             })
             return (
                 <div className="card">
