@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import {Map} from 'immutable'
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,6 +11,8 @@ import {
 import {
   fetchUsers
 } from './actions'
+//import { selectorUsers } from './selectors'
+
 import './App.css'
 import { Header } from './components/Header'
 import GnomesList from './components/GnomesList'
@@ -31,7 +34,7 @@ class App extends Component {
     dispatch(fetchUsers())
   }
   render() {
-    const { users, isFetching, lastUpdated } = this.props
+    const { list, isFetching, lastUpdated } = this.props
     return (
       <div>
         <Header />
@@ -43,12 +46,12 @@ class App extends Component {
               </Route>
               <Route path="/gnomes">
                 <Switch>
-                  <Route exact path="/gnomes">
-                    {isFetching && users.length === 0 && <h2>Loading...</h2>}
-                    {!isFetching && users.length === 0 && <h2>Empty.</h2>}
-                    {users.length > 0 && (
+                  <Route exact path="/gnomes">  
+                    {isFetching && list.length === 0 && <h2>Loading...</h2>}
+                    {!isFetching && list.length === 0 && <h2>Empty.</h2>}
+                    {list.length > 0 && (
                       <div className="data-table-wrapper">
-                        <GnomesList users={users} />
+                        <GnomesList users={list} />
                       </div>
                     )}
                   </Route>
@@ -77,20 +80,23 @@ class App extends Component {
   }
 }
 App.propTypes = {
-  users: PropTypes.array.isRequired,
+  list: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 }
 function mapStateToProps(state) {
-  const { bw } = state
-  const { isFetching, lastUpdated, users } = bw.state || {
+  
+  const deepState = Map(state);
+  const { users } = deepState.toJS()
+  console.log(state)
+  const { isFetching, lastUpdated, list } = users || {
     isFetching: true,
-    users: []
+    list: []
   }
-
+  
   return {
-    users,
+    list,
     isFetching,
     lastUpdated
   }
