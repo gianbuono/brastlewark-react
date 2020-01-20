@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import {Map} from 'immutable'
+import { Map } from 'immutable'
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,11 +9,14 @@ import {
   Route,
 } from "react-router-dom";
 import {
-  fetchUsers
+  fetchUsers,
+  updateFilterName,
+  updateFilterJob,
+  updateFilterMaxAge,
+  updateFilterMinAge
 } from './actions'
-//import { selectorUsers } from './selectors'
-
 import './App.css'
+import { Form, FormGroup, Input } from 'reactstrap';
 import { Header } from './components/Header'
 import GnomesList from './components/GnomesList'
 import { GnomeDetails } from './components/GnomeDetails'
@@ -34,7 +37,11 @@ class App extends Component {
     dispatch(fetchUsers())
   }
   render() {
-    const { list, isFetching, lastUpdated } = this.props
+    const { list, isFetching, filterName, filterJob, filterMaxAge, filterMinAge } = this.props
+    
+    const visibleList = list.filter((user) => user.name.toLowerCase().includes(filterName.toLowerCase()))
+    .filter((user) => user.professions.join(',').toLowerCase().includes(filterJob.toLowerCase())).filter((user) => filterMinAge ? user.age >= filterMinAge : true ).filter((user) => filterMaxAge ? user.age <= filterMaxAge : true )
+
     return (
       <div>
         <Header />
@@ -46,12 +53,32 @@ class App extends Component {
               </Route>
               <Route path="/gnomes">
                 <Switch>
-                  <Route exact path="/gnomes">  
+                  <Route exact path="/gnomes">
                     {isFetching && list.length === 0 && <h2>Loading...</h2>}
                     {!isFetching && list.length === 0 && <h2>Empty.</h2>}
                     {list.length > 0 && (
                       <div className="data-table-wrapper">
-                        <GnomesList users={list} />
+                        <div className="data-table-filter">
+                          <Form inline>
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                              <Input type="text" name="name" id="name" placeholder="Search name" value={filterName}
+                                onChange={this.props.updateFilterName} />
+                            </FormGroup>
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                              <Input type="text" name="job" id="job" placeholder="Search Job" value={filterJob}
+                                onChange={this.props.updateFilterJob} />
+                            </FormGroup>
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                              <Input type="number" name="minage" id="minage" placeholder="Min age" value={filterMinAge}
+                                onChange={this.props.updateFilterMinAge} />
+                            </FormGroup>
+                            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                              <Input type="number" name="maxage" id="maxage" placeholder="Max age" value={filterMaxAge}
+                                onChange={this.props.updateFilterMaxAge} />
+                            </FormGroup>
+                          </Form>
+                        </div>
+                        <GnomesList users={visibleList} />
                       </div>
                     )}
                   </Route>
@@ -85,21 +112,35 @@ App.propTypes = {
   lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired
 }
+
 function mapStateToProps(state) {
-  
   const deepState = Map(state);
   const { users } = deepState.toJS()
-  console.log(state)
-  const { isFetching, lastUpdated, list } = users || {
+  const { isFetching, lastUpdated, list, filterName, filterMinAge, filterMaxAge, filterJob } = users || {
     isFetching: true,
-    list: []
+    list: [],
+    filterName: ''
   }
-  
   return {
     list,
     isFetching,
-    lastUpdated
+    lastUpdated, 
+    filterName,
+    filterJob,
+    filterMinAge,
+    filterMaxAge
   }
 
 }
-export default connect(mapStateToProps)(App)
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    updateFilterName: (e) => dispatch(updateFilterName(e.target.value)),
+    updateFilterJob: (e) => dispatch(updateFilterJob(e.target.value)),
+    updateFilterMinAge: (e) => dispatch(updateFilterMinAge(e.target.value)),
+    updateFilterMaxAge: (e) => dispatch(updateFilterMaxAge(e.target.value)),
+  };
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App)

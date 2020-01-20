@@ -3,13 +3,18 @@ import { fromJS } from 'immutable';
 
 import {
     REQUEST_USERS,
-    RECEIVE_USERS
+    RECEIVE_USERS,
+    UPDATE_FILTER_NAME,
+    UPDATE_FILTER_JOB,
+    UPDATE_FILTER_MIN_AGE,
+    UPDATE_FILTER_MAX_AGE
 } from './actions'
 
 const initialState = fromJS({
     isFetching: true,
     list: [],
-    searchKey: '',
+    filterName: '',
+    filterJob: ''
 });
 
 function users(
@@ -23,21 +28,19 @@ function users(
             return state.set('isFetching', false)
                 .set('list', action.users)
                 .set('lastUpdated', action.receivedAt)
+        case UPDATE_FILTER_NAME:
+            return state.set('filterName', action.data);
+        case UPDATE_FILTER_JOB:
+            return state.set('filterJob', action.data);
+        case UPDATE_FILTER_MIN_AGE:
+            return state.set('filterMinAge', Number(action.data) > 0 ? Number(action.data) : undefined);
+        case UPDATE_FILTER_MAX_AGE:
+            return state.set('filterMaxAge', Number(action.data) > 0 ? Number(action.data) : undefined);
         default:
             return state
     }
 }
-// function bw(state = {}, action) {
-//     switch (action.type) {
-//         case RECEIVE_USERS:
-//         case REQUEST_USERS:
-//             return Object.assign({}, state,
-//                 users(state.users, action)
-//             )
-//         default:
-//             return state
-//     }
-// }
+
 const rootReducer = combineReducers({
     users
 })

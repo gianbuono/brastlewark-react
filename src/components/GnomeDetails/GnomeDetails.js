@@ -4,14 +4,14 @@ import { withRouter, Link } from 'react-router-dom';
 class GnomeDetails extends Component {
 
     render() {
-        const { users, isFetching } = this.props
+        const { list, isFetching } = this.props
         const { gnomeId } = this.props.match.params
-        const gnome = this.props.users[gnomeId];
+        const gnome = this.props.list[gnomeId];
         const friendsArr = [];
         if (gnome) {
 
             gnome.friends.map(function (v, i) {
-                return friendsArr.push(users.find(function (element) { return element.name === v }));
+                return friendsArr.push(list.find(function (element) { return element.name === v }));
             })
             return (
                 <div className="card">
@@ -47,8 +47,8 @@ class GnomeDetails extends Component {
             )
         } else {
             return (
-                isFetching && users.length === 0 ? <h2>Loading...</h2> :
-                    !isFetching && users.length === 0 && <h2>Empty.</h2>
+                isFetching && list.length === 0 ? <h2>Loading...</h2> :
+                    !isFetching && list.length === 0 && <h2>Empty.</h2>
             )
         }
 
