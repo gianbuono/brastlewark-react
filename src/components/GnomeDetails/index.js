@@ -1,3 +1,3 @@
-import GnomeDetails from './GnomeDetails';
+import GnomeDetails from './GnomeDetails'
 
-export default GnomeDetails;
+export {GnomeDetails}
